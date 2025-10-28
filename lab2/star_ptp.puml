@@ -1,0 +1,33 @@
+@startuml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class "Интернет-магазин" as Shop {
+  + createOrder()
+  + sendToCRM()
+}
+
+class CRM {
+  + receiveOrder()
+  + sendToWMS()
+  + sendToAccounting()
+}
+
+class WMS {
+  + receiveOrder()
+  + sendShipmentStatus()
+  + notifyAccounting()
+}
+
+class "Бухгалтерия" as Accounting {
+  + registerPayment()
+  + registerShipment()
+}
+
+' Связи
+Shop "1" --> "*" CRM : заказ\nТриггер: оформление заказа
+CRM "1" --> "*" WMS : заказ\nТриггер: подтверждение заказа
+WMS "1" --> "1" CRM : статус отгрузки\nТриггер: завершение отгрузки
+CRM "1" --> "*" Accounting : оплата\nТриггер: поступление оплаты
+WMS "1" --> "*" Accounting : отгрузка\nТриггер: завершение отгрузки
+@enduml
